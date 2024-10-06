@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  pg:
+  api-find-pet-pg:
     image: bitnami/postgresql
-    port: 
+    ports: 
       - 5432:5432
     environment:
       - POSTGRESQL_USERNAME=docker

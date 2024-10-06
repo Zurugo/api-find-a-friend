@@ -12,3 +12,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  ORG
+  MEMBER
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password_hash String
+  role          Role           @default(MEMBER)
+  created_at    DateTime       @default(now())
+  Organization  Organization[]
+
+  @@map("users")
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  cep       String
+  address   String
+  phone     String
+  user      User     @relation(fields: [user_id], references: [id])
+  user_id   String
+  create_at DateTime @default(now())
+  Pet       Pet[]
+
+  @@map("Organizations")
+}
+
+enum Size {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+model Pet {
+  id                    String       @id @default(uuid())
+  name                  String
+  about                 String
+  age                   String
+  size                  Size         @default(SMALL)
+  energy_level          Int
+  independence_level    Int
+  environment           String
+  photos                String
+  adoption_requirements String
+  organization          Organization @relation(fields: [org_id], references: [id])
+  org_id                String
+  created_at            DateTime     @default(now())
+
+  @@map("Pets")
+}
