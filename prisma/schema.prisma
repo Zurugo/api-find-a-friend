@@ -31,14 +31,14 @@ model User {
 }
 
 model Organization {
-  id        String   @id @default(uuid())
-  cep       String
-  address   String
-  phone     String
-  user      User     @relation(fields: [user_id], references: [id])
-  user_id   String
-  create_at DateTime @default(now())
-  Pet       Pet[]
+  id         String   @id @default(uuid())
+  cep        String
+  address    String
+  phone      String
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String
+  created_at DateTime @default(now())
+  Pet        Pet[]
 
   @@map("Organizations")
 }

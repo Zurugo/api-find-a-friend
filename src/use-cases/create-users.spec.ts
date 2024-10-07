@@ -1,16 +1,16 @@
 import { expect, describe, it, beforeEach } from 'vitest'
-import { CreateUseCase } from './create-users'
+import { CreateUserUseCase } from './create-users'
 import { InMemoryUsersRepository } from '../repositories/in-memory-database.ts/in-memory-users-repository'
 import { UserAlreadyExists } from './errors/users-email-already-in-use'
 
 let usersRepository: InMemoryUsersRepository
-let sut: CreateUseCase
+let sut: CreateUserUseCase
 
 describe('Create users use case', () => {
     beforeEach(() => {
         usersRepository = new InMemoryUsersRepository()
         // @ts-ignore
-        sut = new CreateUseCase(usersRepository)
+        sut = new CreateUserUseCase(usersRepository)
     })
 
     it('should be able to register', async () => {
