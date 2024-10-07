@@ -8,7 +8,7 @@ export class InMemoryUsersRepository implements UsersRepository {
     async findByEmail(email: string) {
         const user = this.items.find((item) => item.email === email)
 
-        if(!user) {
+        if (!user) {
             return null
         }
 
@@ -29,14 +29,15 @@ export class InMemoryUsersRepository implements UsersRepository {
     // @ts-ignore
     async create(data: Prisma.UserCreateInput) {
         const user = {
-            id: randomUUID(),
+            id: data.id ?? randomUUID(),
             name: data.name,
             email: data.email,
+            role: data.role ?? 'MEMBER',
             password_hash: data.password_hash,
             created_at: new Date()
         }
 
-        // @ts-ignore
+        
         this.items.push(user)
 
         return user

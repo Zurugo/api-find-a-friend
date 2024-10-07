@@ -9,29 +9,29 @@ let usersRepository: InMemoryUsersRepository
 let organizationsRepository: InMemoryOrganizationsRepository
 let sut: CreateOrganizationUseCase
 
-describe('Crete organizations use case', () => {
+describe('Create organizations use case', () => {
     beforeEach(async () => {
         usersRepository = new InMemoryUsersRepository()
         organizationsRepository = new InMemoryOrganizationsRepository()
         // @ts-ignore
         sut = new CreateOrganizationUseCase(organizationsRepository, usersRepository)
-    })
 
-    it('should be able to create an organization', async () => {
         const password = await hash('123456', 6)
 
-        const user = await usersRepository.create({
+        await usersRepository.create({
+            id: 'user-01',
             name: 'John Doe',
             email: 'johndoe@example.com',
             password_hash: password
         })
+    })
 
-
+    it('should be able to create an organization', async () => {
         const { organization } = await sut.execute({
             cep: '14090520',
             address: 'Avenue 13 de maio',
             phone: '16 99343 6789',
-            user_id: user.id
+            user_id: 'user-01'
         })
 
         expect(organization.id).toEqual(expect.any(String))
@@ -43,7 +43,7 @@ describe('Crete organizations use case', () => {
                 cep: '14090520',
                 address: 'Avenue 13 de maio',
                 phone: '16 99343 6789',
-                user_id: 'user.id'
+                user_id: 'user-02'
             }) 
         ).rejects.toBeInstanceOf(ResourceNotFoundError)
     })
