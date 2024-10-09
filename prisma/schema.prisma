@@ -33,7 +33,11 @@ model User {
 model Organization {
   id         String   @id @default(uuid())
   cep        String
-  address    String
+  state      String
+  city       String
+  district   String
+  street     String
+  number     String
   phone      String
   user       User     @relation(fields: [user_id], references: [id])
   user_id    String
