@@ -5,7 +5,11 @@ import { ResourceNotFoundError } from "./errors/resource-not-found-error"
 
 interface CreateOrganizaitonUseCaseRequest {
     cep: string
-    address: string
+    state: string
+    city: string
+    district: string
+    street: string
+    number: string
     phone: string
     user_id: string
 }
@@ -23,7 +27,11 @@ export class CreateOrganizationUseCase {
 
     async execute({
         cep,
-        address,
+        state,
+        city,
+        district,
+        street,
+        number,
         phone,
         user_id,
     }: CreateOrganizaitonUseCaseRequest): Promise<CreateOrganizationUseCaseResponse> {
@@ -35,7 +43,11 @@ export class CreateOrganizationUseCase {
 
         const organization = await this.organizationsRepository.create({
             cep,
-            address,
+            state,
+            city,
+            district,
+            street,
+            number,
             phone,
             user_id,
         })

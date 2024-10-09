@@ -29,7 +29,11 @@ describe('Create organizations use case', () => {
     it('should be able to create an organization', async () => {
         const { organization } = await sut.execute({
             cep: '14090520',
-            address: 'Avenue 13 de maio',
+            state: 'Sao Paulo',
+            city: 'Ribeirao Preto',
+            district: 'Jardim Lagoinha',
+            street: 'Osorio ferreira',
+            number: '467',
             phone: '16 99343 6789',
             user_id: 'user-01'
         })
@@ -41,7 +45,11 @@ describe('Create organizations use case', () => {
         await expect(() => 
             sut.execute({
                 cep: '14090520',
-                address: 'Avenue 13 de maio',
+                state: 'Sao Paulo',
+                city: 'Ribeirao Preto',
+                district: 'Jardim Lagoinha',
+                street: 'Osorio ferreira',
+                number: '467',
                 phone: '16 99343 6789',
                 user_id: 'user-02'
             }) 
