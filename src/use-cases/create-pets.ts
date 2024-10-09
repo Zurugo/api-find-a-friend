@@ -44,7 +44,7 @@ export class CreatePetUseCase {
         org_id,
     }: CreatePetUseCaseRequest): Promise<CreatePetUseCaseResponse> {
         const organization = await this.organizationsRepository.findById(org_id)
-        console.log(organization)
+        
         if (!organization) {
             throw new ResourceNotFoundError()
         }
