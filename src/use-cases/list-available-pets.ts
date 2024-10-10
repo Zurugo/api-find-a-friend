@@ -1,10 +1,8 @@
-import { Pet, User } from '@prisma/client'
+import { Pet } from '@prisma/client'
 import { PetsRepository } from "@/repositories/pets-repository"
 import { OrganizationsRepository } from "@/repositories/orgs-repository"
-import { UsersRepository } from '@/repositories/users-repository'
 import { OrganizationCityNotAvailable } from './errors/organization-city-is-not-available-errors'
 import { PetsNotAvailableInCity } from './errors/pets-not-found-in-city-error'
-
 
 
 interface ListAvailablePetsUseCaseRequest {
@@ -15,7 +13,7 @@ interface ListAvailablePetsUseCaseResponse {
     pets: Pet[]
 }
 
-export class ListAvailablePetsUseCase {
+export class ListAvailablePetsByCityUseCase {
     constructor(
         private organizationsRepository: OrganizationsRepository,
         private petsRepository: PetsRepository
@@ -24,21 +22,28 @@ export class ListAvailablePetsUseCase {
     async execute({
         city
     }: ListAvailablePetsUseCaseRequest): Promise<ListAvailablePetsUseCaseResponse> {
-        const organization = await this.organizationsRepository.findByCity(city)
+        const organizations = await this.organizationsRepository.findByCity(city)
 
-        if (!organization) {
+        if (!organizations) {
             throw new OrganizationCityNotAvailable()
         }
 
-        const pets = await this.petsRepository.findByOrgId(organization.id)
-
-        if (!pets) {
+        const arrayPets = await Promise.all(
+            organizations.map(async(organization) => {
+                return this.petsRepository.findByOrgId(organization.id)
+            })
+        )
+        
+        if (arrayPets.length === 0) {
             throw new PetsNotAvailableInCity()
         }
 
+        const pets = arrayPets
+            .filter(petByOrg => petByOrg !== null)
+            .flat()
+    
         return { 
             pets
         }
-
     }
 }

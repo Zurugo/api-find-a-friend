@@ -1,23 +1,24 @@
 import { expect, describe, it, beforeEach } from 'vitest'
-import { ListAvailablePetsByCityUseCase } from './list-available-pets'
-import { InMemoryPetsRepository } from '@/repositories/in-memory-database.ts/in-memory-pets-repository'
-import { InMemoryOrganizationsRepository } from '@/repositories/in-memory-database.ts/in-memory-organizations-repository'
+import { ListAvailablePetsByCharacteristics } from './list-pets-by-characteristics'
 import { InMemoryUsersRepository } from '@/repositories/in-memory-database.ts/in-memory-users-repository'
+import { InMemoryOrganizationsRepository } from '@/repositories/in-memory-database.ts/in-memory-organizations-repository'
+import { InMemoryPetsRepository } from '@/repositories/in-memory-database.ts/in-memory-pets-repository'
 import { hash } from 'bcryptjs'
 
 
-let usersRepository: InMemoryUsersRepository
-let petsRepository: InMemoryPetsRepository
-let organizationRepository: InMemoryOrganizationsRepository
-let sut: ListAvailablePetsByCityUseCase
 
-describe('Search all availables pets list in city', () => {
+let usersRepository: InMemoryUsersRepository
+let organizationRepository: InMemoryOrganizationsRepository
+let petsRepository: InMemoryPetsRepository
+let sut: ListAvailablePetsByCharacteristics
+
+describe('Search all pets by your characteristics', () => {
     beforeEach(async () => {
         usersRepository = new InMemoryUsersRepository()
         organizationRepository = new InMemoryOrganizationsRepository()
         petsRepository = new InMemoryPetsRepository()
-        
-        sut = new ListAvailablePetsByCityUseCase(organizationRepository, petsRepository)
+
+        sut = new ListAvailablePetsByCharacteristics(petsRepository)
 
         const password = await hash('123456', 6)
 
@@ -37,30 +38,6 @@ describe('Search all availables pets list in city', () => {
             street:'Jose aissum', 
             number: '1021',
             phone: '15 98822 1212',
-            user_id: 'user-01'
-        })
-
-        await organizationRepository.create({
-            id:'org-02',
-            cep: '14090520',
-            state: 'Sao Paulo',
-            city: 'Ribeirao Preto',
-            district: 'bonfim Paulista',
-            street:'Indenpendencia', 
-            number: '78',
-            phone: '15 99822 1212',
-            user_id: 'user-01'
-        })
-
-        await organizationRepository.create({
-            id:'org-03',
-            cep: '14090520',
-            state: 'Sao Paulo',
-            city: 'Franca',
-            district: 'Paulista',
-            street:'Indenpendencia', 
-            number: '78',
-            phone: '15 99822 1212',
             user_id: 'user-01'
         })
 
@@ -103,36 +80,22 @@ describe('Search all availables pets list in city', () => {
             environment: 'Casas ou apartamentos',
             photos: 'myapp/root/app/images/org_id',
             adoption_requirements: 'Renda minima R$12000',
-            org_id: 'org-02',
-        })
-
-
-        await petsRepository.create({
-            id: 'Pet-01',
-            name: 'Linda',
-            about: 'Border collie',
-            age: '12',
-            size: 'SMALL',
-            energy_level: 8,
-            independence_level: 2,
-            environment: 'Casas ou apartamentos',
-            photos: 'myapp/root/app/images/org_id',
-            adoption_requirements: 'Renda minima R$3500',
-            org_id: 'org-03',
+            org_id: 'org-01',
         })
     })
 
-    it('should be able to get a list of pets', async () => {
-        const { pets } = await sut.execute({
-            city: 'Ribeirao Preto'
-        })
 
-        expect(pets).toHaveLength(3)
+    it('should be able to search a pet list by your characteristics', async () => {
+        const { pets } = await sut.execute({
+            query: 'SMALL'
+        })
+        
+        expect(pets).toHaveLength(2)
 
         expect(pets).toEqual([
-            expect.objectContaining({ org_id: 'org-01' }),
-            expect.objectContaining({ org_id: 'org-01' }),
-            expect.objectContaining({ org_id: 'org-02' }),
+            expect.objectContaining({ size: 'SMALL' }),
+            expect.objectContaining({ size: 'SMALL' }),
         ])
     })
+
 })

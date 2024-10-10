@@ -16,13 +16,28 @@ export class InMemoryOrganizationsRepository implements OrganizationsRepository 
     }
 
     async findByCity(city: string) {
-        const organization = this.items.find((item) => item.city == city)
+        const organizations = this.items.filter((item) => item.city == city)
 
-        if (!organization) {
+        if (!organizations) {
             return null
         }
 
-        return organization
+        const organizationsByCity = organizations.map(item => ({
+            id: item.id,
+            cep: item.cep,
+            state: item.state,
+            city: item.city,
+            district: item.district,
+            street: item.street,
+            number: item.number,
+            phone: item.phone,
+            user_id: item.user_id,
+            created_at: new Date()
+        }))
+
+
+
+        return organizationsByCity
     }
 
     async create(data: Prisma.OrganizationUncheckedCreateInput) {
