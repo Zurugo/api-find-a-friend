@@ -129,6 +129,8 @@ describe('Search all availables pets list in city', () => {
 
         expect(pets).toHaveLength(3)
 
+        
+
         expect(pets).toEqual([
             expect.objectContaining({ org_id: 'org-01' }),
             expect.objectContaining({ org_id: 'org-01' }),

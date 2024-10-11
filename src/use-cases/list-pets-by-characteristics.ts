@@ -26,8 +26,12 @@ export class ListAvailablePetsByCharacteristics {
             throw new PetsNotFoundThisCharacteristics()
         }
 
-        return { 
-            pets
+        if (pets.length === 0) {
+            throw new PetsNotFoundThisCharacteristics()
+        }
+
+        return  {
+            pets    
         }
     }
 }

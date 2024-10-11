@@ -4,6 +4,7 @@ import { InMemoryUsersRepository } from '@/repositories/in-memory-database.ts/in
 import { InMemoryOrganizationsRepository } from '@/repositories/in-memory-database.ts/in-memory-organizations-repository'
 import { InMemoryPetsRepository } from '@/repositories/in-memory-database.ts/in-memory-pets-repository'
 import { hash } from 'bcryptjs'
+import { PetsNotFoundThisCharacteristics } from './errors/pets-not-found-this-charateristics'
 
 
 
@@ -92,10 +93,19 @@ describe('Search all pets by your characteristics', () => {
         
         expect(pets).toHaveLength(2)
 
+        
+
         expect(pets).toEqual([
             expect.objectContaining({ size: 'SMALL' }),
             expect.objectContaining({ size: 'SMALL' }),
         ])
     })
 
+    it('should be able to return a zero pets with the given charcterstics', async () => {
+        await expect(() =>
+            sut.execute({
+                query: 'Horse'
+            }), 
+        ).rejects.toBeInstanceOf(PetsNotFoundThisCharacteristics)
+    })
 })

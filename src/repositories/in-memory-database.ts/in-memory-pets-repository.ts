@@ -5,6 +5,16 @@ import { randomUUID } from 'node:crypto'
 export class InMemoryPetsRepository implements PetsRepository {
     public items: Pet[] = []
 
+    async findPetById(id: string) {
+        const pet = await this.items.find((item) => item.id === id)
+
+        if(!pet) {
+            return null
+        }
+
+        return pet
+    }
+
     async findPetByCharacteristics(query: string) {
         const lowerCaseQuery = query.toLowerCase()
 
@@ -18,8 +28,6 @@ export class InMemoryPetsRepository implements PetsRepository {
 
     async findByOrgId(id: string) {
         const filterPetsByOrgId = this.items.filter(item => item.org_id === id)
-
-        console.log(filterPetsByOrgId)
 
         const petsByCityId = filterPetsByOrgId.map(item => ({
             id: item.id,
