@@ -22,7 +22,7 @@ export class ListAvailablePetsByCityUseCase {
     async execute({
         city
     }: ListAvailablePetsUseCaseRequest): Promise<ListAvailablePetsUseCaseResponse> {
-        const organizations = await this.organizationsRepository.findByCity(city)
+        const organizations = await this.organizationsRepository.findManyOrgsByCity(city, 1)
 
         if (!organizations) {
             throw new OrganizationCityNotAvailable()
@@ -30,7 +30,7 @@ export class ListAvailablePetsByCityUseCase {
 
         const arrayPets = await Promise.all(
             organizations.map(async(organization) => {
-                return this.petsRepository.findByOrgId(organization.id)
+                return this.petsRepository.findManyPetsByOrgId(organization.id, 1)
             })
         )
         

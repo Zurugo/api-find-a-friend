@@ -15,7 +15,7 @@ export class InMemoryPetsRepository implements PetsRepository {
         return pet
     }
 
-    async findPetByCharacteristics(query: string) {
+    async findManyPetsByCharacteristics(query: string) {
         const lowerCaseQuery = query.toLowerCase()
 
         return this.items.filter(item => {
@@ -26,7 +26,7 @@ export class InMemoryPetsRepository implements PetsRepository {
     }
 
 
-    async findByOrgId(id: string) {
+    async findManyPetsByOrgId(id: string) {
         const filterPetsByOrgId = this.items.filter(item => item.org_id === id)
 
         const petsByCityId = filterPetsByOrgId.map(item => ({

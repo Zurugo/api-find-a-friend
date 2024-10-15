@@ -20,7 +20,7 @@ export class ListAvailablePetsByCharacteristics {
         query
     }: ListPetsByCharacteristicsUseCaseRequest): Promise<ListPetsByCharacteristicsuseCaseResponse>
     {
-        const pets = await this.petsRepository.findPetByCharacteristics(query)
+        const pets = await this.petsRepository.findManyPetsByCharacteristics(query)
 
         if (!pets) {
             throw new PetsNotFoundThisCharacteristics()

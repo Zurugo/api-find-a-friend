@@ -15,7 +15,7 @@ export class InMemoryOrganizationsRepository implements OrganizationsRepository 
         return organization
     }
 
-    async findByCity(city: string) {
+    async findManyOrgsByCity(city: string) {
         const organizations = this.items.filter((item) => item.city == city)
 
         if (!organizations) {
