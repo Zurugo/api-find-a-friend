@@ -26,7 +26,6 @@ interface CreatePetUseCaseResponse {
 export class CreatePetUseCase {
     constructor(
         private petsRepository: PetsRepository,
-        private usersRepository: UsersRepository,
         private organizationsRepository: OrganizationsRepository,
         
     ){}
