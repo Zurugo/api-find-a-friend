@@ -23,15 +23,17 @@ describe('Refresh Token (e2e)', () => {
             password: '123456'
         })
 
-        console.log(authResponse)
-
         const cookies = authResponse.get('Set-Cookie')
+
 
         const response = await request(app.server)
             .patch('/token/refresh')
             .set('Cookie', cookies)
             .send()
 
+
+        console.log(response.body)
+        
         expect(response.statusCode).toEqual(200)
         expect(response.body).toEqual({
             token: expect.any(String),

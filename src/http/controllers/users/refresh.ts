@@ -5,6 +5,8 @@ export async function refresh(request: FastifyRequest, reply: FastifyReply) {
 
     const { role } = request.user
 
+    console.log(role)
+
     const token = await reply.jwtSign(
         { role },
         {
