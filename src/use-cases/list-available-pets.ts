@@ -1,8 +1,9 @@
 import { Pet } from '@prisma/client'
 import { PetsRepository } from "@/repositories/pets-repository"
 import { OrganizationsRepository } from "@/repositories/orgs-repository"
-import { OrganizationCityNotAvailable } from './errors/organization-city-is-not-available-errors'
+import { OrganizationParameterCityIsRequired } from './errors/organization-city-is-required-to-search-pets-errors'
 import { PetsNotAvailableInCity } from './errors/pets-not-found-in-city-error'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
 
 interface ListAvailablePetsUseCaseRequest {
@@ -23,9 +24,12 @@ export class ListAvailablePetsByCityUseCase {
         city
     }: ListAvailablePetsUseCaseRequest): Promise<ListAvailablePetsUseCaseResponse> {
         const organizations = await this.organizationsRepository.findManyOrgsByCity(city, 1)
+        if(!city) {
+            throw new OrganizationParameterCityIsRequired()
+        }
 
         if (!organizations) {
-            throw new OrganizationCityNotAvailable()
+            throw new ResourceNotFoundError()
         }
 
         const arrayPets = await Promise.all(

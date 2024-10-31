@@ -4,6 +4,7 @@ import { InMemoryPetsRepository } from '@/repositories/in-memory-database.ts/in-
 import { InMemoryOrganizationsRepository } from '@/repositories/in-memory-database.ts/in-memory-organizations-repository'
 import { InMemoryUsersRepository } from '@/repositories/in-memory-database.ts/in-memory-users-repository'
 import { hash } from 'bcryptjs'
+import { OrganizationParameterCityIsRequired } from './errors/organization-city-is-required-to-search-pets-errors'
 
 
 let usersRepository: InMemoryUsersRepository
@@ -136,5 +137,13 @@ describe('Search all availables pets list in city', () => {
             expect.objectContaining({ org_id: 'org-01' }),
             expect.objectContaining({ org_id: 'org-02' }),
         ])
+    })
+
+    it('should not be able to search a pet without informing city in filter', async () => {
+        await expect(() =>
+            sut.execute({
+                city: ''
+            }) 
+        ).rejects.toBeInstanceOf(OrganizationParameterCityIsRequired)
     })
 })

@@ -18,7 +18,7 @@ describe('Create a pet', () => {
         usersRepository = new InMemoryUsersRepository
         organizationsRepository = new InMemoryOrganizationsRepository()
         petsRepository = new InMemoryPetsRepository()
-        sut = new CreatePetUseCase(petsRepository, usersRepository ,organizationsRepository)
+        sut = new CreatePetUseCase(petsRepository,organizationsRepository)
 
         await usersRepository.create({
             id: 'user-01',
@@ -34,9 +34,12 @@ describe('Create a pet', () => {
     it('should be able to create a pet', async () => {
 
         const organization = await organizationsRepository.create({
-            id: 'org-01',
             cep: '14090520',
-            address: 'Avenue 13 de maio',
+            state: 'Sao Paulo',
+            city: 'Ribeirao Preto',
+            district: 'Jardim Lagoinha',
+            street: 'Osorio ferreira',
+            number: '467',
             phone: '16 99343 6789',
             user_id: 'user-01'
         })

@@ -1,6 +1,6 @@
 import { Pet } from '@prisma/client'
 import { PetsRepository } from '@/repositories/pets-repository'
-import { OrganizationCityNotAvailable } from './errors/organization-city-is-not-available-errors'
+import { OrganizationCityNotAvailable } from './errors/organization-city-is-required-to-search-pets-errors'
 import { PetsNotFoundThisCharacteristics } from './errors/pets-not-found-this-charateristics'
 
 
