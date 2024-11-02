@@ -6,6 +6,7 @@ import { env } from './env'
 import { ZodError } from 'zod'
 
 import { usersRoutes } from './http/controllers/users/routes'
+import { petsRoutes } from './http/controllers/pets/routes'
 
 
 export const app = fastify()
@@ -26,6 +27,7 @@ app.register(fastifyCookie)
 console.log(env.JWT_SECRET)
 
 app.register(usersRoutes)
+app.register(petsRoutes)
 
 
 app.setErrorHandler((error, _request, reply) => {
