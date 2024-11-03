@@ -1,9 +1,23 @@
-import { Pet, Prisma } from "@prisma/client"
+import { Organization, Pet, Prisma } from "@prisma/client"
 import { PetsRepository } from "../pets-repository"
 import { randomUUID } from 'node:crypto'
 
 export class InMemoryPetsRepository implements PetsRepository {
     public items: Pet[] = []
+    public orgs: Organization[] = [
+        {
+            id:'org-01',
+            cep: '14090520',
+            state: 'Sao Paulo',
+            city: 'Ribeirao Preto',
+            district: 'Castelo Branco Novo',
+            street:'Jose aissum', 
+            number: '1021',
+            phone: '15 98822 1212',
+            user_id: 'user-01',
+            created_at: new Date()
+        }
+    ]
 
     async findPetById(id: string) {
         const pet = await this.items.find((item) => item.id === id)
@@ -15,14 +29,38 @@ export class InMemoryPetsRepository implements PetsRepository {
         return pet
     }
 
-    async findManyPetsByCharacteristics(query: string) {
-        const lowerCaseQuery = query.toLowerCase()
+    async findManyPetsByCharacteristics(org_id: string, query?: string) {
+        const filteredPets = this.items.filter(pet => pet.org_id === org_id);
 
-        return this.items.filter(item => {
-            return Object.values(item).some(value => 
-                value.toString().toLowerCase().includes(lowerCaseQuery)
-            )
-        })
+        
+
+        // Se `query` não estiver presente, retornamos apenas os pets filtrados por `org_id`
+        if (!query) {
+            return filteredPets;
+        }
+    
+        // Transformamos `query` para minúsculas para comparação insensível a maiúsculas/minúsculas
+        const lowerCaseQuery = query.toLowerCase();
+    
+        // Aplicamos o filtro adicional baseado nos critérios de `query`
+        return filteredPets.filter(pet => {
+            return (
+                pet.name.toLowerCase().includes(lowerCaseQuery) ||
+                pet.about?.toLowerCase().includes(lowerCaseQuery) ||
+                pet.age?.toLowerCase().includes(lowerCaseQuery) ||
+                pet.size === query ||  // Presumindo que `size` pode ser uma string
+                pet.energy_level === parseInt(query) ||  // Presumindo que `energy_level` é um número
+                pet.independence_level === parseInt(query) || // Presumindo que `independence_level` é um número
+                pet.environment?.toLowerCase().includes(lowerCaseQuery) ||
+                (Array.isArray(pet.adoption_requirements) && pet.adoption_requirements.some(req => req.toLowerCase().includes(lowerCaseQuery)))
+            );
+            
+        });
+
+        
+
+        
+
     }
 
 

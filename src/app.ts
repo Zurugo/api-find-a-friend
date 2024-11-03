@@ -24,7 +24,7 @@ app.register(fastifyJwt, {
 
 
 app.register(fastifyCookie)
-console.log(env.JWT_SECRET)
+
 
 app.register(usersRoutes)
 app.register(petsRoutes)

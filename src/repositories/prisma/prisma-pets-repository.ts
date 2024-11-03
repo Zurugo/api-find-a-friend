@@ -28,10 +28,12 @@ export class PrismaPetsRepository implements PetsRepository {
         return pets
     }
     
-    async findManyPetsByCharacteristics(query: string) {
+    async findManyPetsByCharacteristics(org_id: string, query: string) {
         const pets = await prisma.pet.findMany({
             where: {
-                OR : [
+                org_id: org_id,
+                AND : query? 
+                [
                     { name: { contains: query, mode: 'insensitive' }},
                     { about: { contains: query, mode: 'insensitive' }},
                     { age: { contains: query, mode: 'insensitive' }},
@@ -40,7 +42,7 @@ export class PrismaPetsRepository implements PetsRepository {
                     { independence_level: { equals: parseInt(query) }},
                     { environment: { contains: query, mode: 'insensitive' }},
                     { adoption_requirements: { contains: query, mode: 'insensitive' }},           
-                ]
+                ]   : undefined
             }
         })
 

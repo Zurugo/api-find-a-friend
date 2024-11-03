@@ -32,7 +32,7 @@ describe('Refresh Token (e2e)', () => {
             .send()
 
 
-        console.log(response.body)
+        
         
         expect(response.statusCode).toEqual(200)
         expect(response.body).toEqual({

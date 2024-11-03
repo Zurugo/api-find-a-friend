@@ -1,36 +1,73 @@
 import { Pet } from '@prisma/client'
 import { PetsRepository } from '@/repositories/pets-repository'
 import { PetsNotFoundThisCharacteristics } from './errors/pets-not-found-this-charateristics'
+import { OrganizationsRepository } from '@/repositories/orgs-repository'
+import { ResourceNotFoundError } from './errors/resource-not-found-error'
+import { ParameterCityIsRequired } from './errors/city-is-required-to-search-pets-errors'
+import { petsRoutes } from '@/http/controllers/pets/routes'
 
 
 interface ListPetsByCharacteristicsUseCaseRequest {
-    query: string
+    city: string
+    query: string | null
 }
 
-interface ListPetsByCharacteristicsuseCaseResponse {
-    pets: Pet[]
+interface ListPetsByCharacteristicsUseCaseResponse {
+    pets: Pet[] 
 }
 
 export class ListAvailablePetsByCharacteristics {
-    constructor(private petsRepository: PetsRepository){}
+    constructor(
+        private organizationsRepository: OrganizationsRepository,
+        private petsRepository: PetsRepository
+        
+    ){}
 
 
     async execute({
+        city,
         query
-    }: ListPetsByCharacteristicsUseCaseRequest): Promise<ListPetsByCharacteristicsuseCaseResponse>
+    }: ListPetsByCharacteristicsUseCaseRequest): Promise<ListPetsByCharacteristicsUseCaseResponse>
     {
-        const pets = await this.petsRepository.findManyPetsByCharacteristics(query)
+        const allPets = []
 
-        if (!pets) {
-            throw new PetsNotFoundThisCharacteristics()
+        if(!city) {
+            throw new ParameterCityIsRequired()
         }
 
-        if (pets.length === 0) {
-            throw new PetsNotFoundThisCharacteristics()
+        const organizations = await this.organizationsRepository.findManyOrgsByCity(city, 1)
+
+        if(!organizations) {
+            throw new ResourceNotFoundError()
         }
 
-        return  {
-            pets    
+
+
+        const pets = await Promise.all(
+            organizations.map(async (org) => {
+                const pets = await this.petsRepository.findManyPetsByCharacteristics(org.id, query)
+
+                console.log(pets)
+
+                if(!pets) {
+                    throw new ResourceNotFoundError()
+                }
+
+                if (pets.length === 0) {
+                    throw new PetsNotFoundThisCharacteristics()
+                }
+
+            
+
+                return pets
+            })
+        )
+        console.log(pets.flat())
+
+        return {
+            pets: pets.flat()
         }
+
+        
     }
 }
