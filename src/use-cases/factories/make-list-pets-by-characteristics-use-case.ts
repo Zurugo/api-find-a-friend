@@ -1,6 +1,6 @@
 import { PrismaPetsRepository } from "@/repositories/prisma/prisma-pets-repository"
 import { PrismaOrganizationRepository } from "@/repositories/prisma/prisma-organizations-repository"
-import { ListAvailablePetsByCharacteristics } from "../list-pets-by-characteristics"
+import { ListAvailablePetsByCharacteristics } from "../list-pets"
 
 export function makeListAvailablePets() {
     const organizationsRepository = new PrismaOrganizationRepository()

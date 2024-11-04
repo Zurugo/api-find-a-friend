@@ -1,5 +1,5 @@
 import { expect, describe, it, beforeEach } from 'vitest'
-import { ListAvailablePetsByCharacteristics } from './list-pets-by-characteristics'
+import { ListAvailablePetsByCharacteristics } from './list-pets'
 import { InMemoryUsersRepository } from '@/repositories/in-memory-database.ts/in-memory-users-repository'
 import { InMemoryOrganizationsRepository } from '@/repositories/in-memory-database.ts/in-memory-organizations-repository'
 import { InMemoryPetsRepository } from '@/repositories/in-memory-database.ts/in-memory-pets-repository'

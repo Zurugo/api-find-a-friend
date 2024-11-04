@@ -105,10 +105,10 @@ describe('List all Pets (e2e)', () => {
 
     it('Should be able to search requested just filter city', async () => {
         const response = await request(app.server).get('/pets/list/Ribeirao%20Preto')
-        // console.log(response)
-        console.log(response.body)
 
         expect(response.statusCode).toEqual(200)
+        
+
         expect(response.body).toEqual(
             expect.objectContaining({
                 pets: 

@@ -7,6 +7,7 @@ import { ZodError } from 'zod'
 
 import { usersRoutes } from './http/controllers/users/routes'
 import { petsRoutes } from './http/controllers/pets/routes'
+import { organizationsRoutes } from './http/controllers/organizations/routes'
 
 
 export const app = fastify()
@@ -27,6 +28,7 @@ app.register(fastifyCookie)
 
 
 app.register(usersRoutes)
+app.register(organizationsRoutes)
 app.register(petsRoutes)
 
 

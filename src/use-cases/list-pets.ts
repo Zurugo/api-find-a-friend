@@ -4,7 +4,6 @@ import { PetsNotFoundThisCharacteristics } from './errors/pets-not-found-this-ch
 import { OrganizationsRepository } from '@/repositories/orgs-repository'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
 import { ParameterCityIsRequired } from './errors/city-is-required-to-search-pets-errors'
-import { petsRoutes } from '@/http/controllers/pets/routes'
 
 
 interface ListPetsByCharacteristicsUseCaseRequest {
@@ -29,8 +28,6 @@ export class ListAvailablePetsByCharacteristics {
         query
     }: ListPetsByCharacteristicsUseCaseRequest): Promise<ListPetsByCharacteristicsUseCaseResponse>
     {
-        const allPets = []
-
         if(!city) {
             throw new ParameterCityIsRequired()
         }
@@ -41,13 +38,9 @@ export class ListAvailablePetsByCharacteristics {
             throw new ResourceNotFoundError()
         }
 
-
-
         const pets = await Promise.all(
             organizations.map(async (org) => {
                 const pets = await this.petsRepository.findManyPetsByCharacteristics(org.id, query)
-
-                console.log(pets)
 
                 if(!pets) {
                     throw new ResourceNotFoundError()
@@ -56,18 +49,13 @@ export class ListAvailablePetsByCharacteristics {
                 if (pets.length === 0) {
                     throw new PetsNotFoundThisCharacteristics()
                 }
-
-            
-
+                
                 return pets
             })
         )
-        console.log(pets.flat())
 
         return {
             pets: pets.flat()
         }
-
-        
     }
 }

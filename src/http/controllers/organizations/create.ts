@@ -14,7 +14,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
         street: z.string(),
         number: z.string(),
         phone: z.string(),
-        user_id: z.string().uuid()
+        user_id: z.string()
     })
 
     const { cep, state, city, district, street, number, phone, user_id } = createOrganizationBodySchema.parse(request.body)
