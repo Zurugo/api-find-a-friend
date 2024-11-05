@@ -3,6 +3,7 @@ import { app } from '@/app'
 import { beforeAll, afterAll, describe, expect, it } from 'vitest'
 import { prisma } from '@/lib/prisma'
 import { hash } from 'bcryptjs'
+import { createAndAuthenticateUser } from '@/utils/test/create-and-authenticate-user'
 
 
 
@@ -17,17 +18,13 @@ describe('Create organization (e2e)', () => {
 
 
     it('Should be able to create an organization', async () => {
-        await prisma.user.create({
-            data: {
-                id: 'user-01',
-                name: 'John Doe',
-                email: 'johndoe@example.com',
-                password_hash: await hash('123456', 6)
-            }
-        })
-        
+        const { token } = await createAndAuthenticateUser(app, true)
+
+        const user = await prisma.user.findFirstOrThrow()
+
         const response = await request(app.server)
             .post('/org')
+            .set('Authorization', `Bearer ${token}`)
             .send({
                 cep: '14090520',
                 state: 'Sao Paulo',
@@ -36,10 +33,8 @@ describe('Create organization (e2e)', () => {
                 street: 'Osorio ferreira',
                 number: '467',
                 phone: '16 99343 6789',
-                user_id: 'user-01'
+                user_id: user.id
             })
-
-        console.log(response)
 
         expect(response.statusCode).toEqual(201)
     })

@@ -3,6 +3,7 @@ import { app } from '@/app'
 import { beforeAll, afterAll, describe, expect, it } from 'vitest'
 import { prisma } from '@/lib/prisma'
 import { hash } from 'bcryptjs'
+import { createAndAuthenticateUser } from '@/utils/test/create-and-authenticate-user'
 
 describe('Find pet by Id (e2e)', () => {
     beforeAll(async () => {
@@ -14,13 +15,9 @@ describe('Find pet by Id (e2e)', () => {
     })
 
     it('Should be able to return a pet by ID', async () => {
-        const user = await prisma.user.create({
-            data: {
-                name: 'John Doe',
-                email: 'johndoe@example.com',
-                password_hash: await hash('123456', 6)
-            }
-        })
+        const { token } = await createAndAuthenticateUser(app, true)
+
+        const user = await prisma.user.findFirstOrThrow()
 
         const organization = await prisma.organization.create({
             data: {
@@ -50,7 +47,9 @@ describe('Find pet by Id (e2e)', () => {
             }
         })
 
-        const response = await request(app.server).get(`/pet/${pet.id}/find`)
+        const response = await request(app.server)
+            .get(`/pet/${pet.id}/find`)
+            .set('Authorization', `Bearer ${token}`)
 
 
         expect(response.statusCode).toEqual(200)
