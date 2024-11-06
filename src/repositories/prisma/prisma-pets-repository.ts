@@ -34,14 +34,14 @@ export class PrismaPetsRepository implements PetsRepository {
                 org_id: org_id,
                 AND : query? 
                 [
-                    { name: { contains: query, mode: 'insensitive' }},
-                    { about: { contains: query, mode: 'insensitive' }},
-                    { age: { contains: query, mode: 'insensitive' }},
+                    // { name: { contains: query, mode: 'insensitive' }},
+                    // { about: { contains: query, mode: 'insensitive' }},
+                    // { age: { contains: query, mode: 'insensitive' }},
                     { size: query as Size },
-                    { energy_level: { equals: parseInt(query) }},
-                    { independence_level: { equals: parseInt(query) }},
-                    { environment: { contains: query, mode: 'insensitive' }},
-                    { adoption_requirements: { contains: query, mode: 'insensitive' }},           
+                    // !isNaN(parseInt(query)) ? { energy_level: { equals: parseInt(query) }} : {},
+                    // !isNaN(parseInt(query)) ? { independence_level: { equals: parseInt(query) }} : {},
+                    // { environment: { contains: query, mode: 'insensitive' }},
+                    // { adoption_requirements: { contains: query, mode: 'insensitive' }},           
                 ]   : undefined
             }
         })
