@@ -27,7 +27,6 @@ export async function listPets(request: FastifyRequest, reply: FastifyReply) {
             query: query ? query : null
         })
         
-        console.log(pets)
         return reply.status(200).send(pets)
 
     } catch (err) {

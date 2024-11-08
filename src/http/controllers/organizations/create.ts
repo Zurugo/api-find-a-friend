@@ -17,7 +17,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
         user_id: z.string()
     })
 
-    const { cep, state, city, district, street, number, phone, user_id } = createOrganizationBodySchema.parse(request.body)
+    const { cep, state, city, district, street, number, phone } = createOrganizationBodySchema.parse(request.body)
 
     try {
         const createUseCase = makeCreateOrganizationsUseCase()
@@ -30,7 +30,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
             street,
             number,
             phone,
-            user_id
+            user_id: request.user.sub
         })
     } catch (err) {
         if (err instanceof OrganizationAlreadyExistsWithThisInfos) {

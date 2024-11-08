@@ -20,7 +20,7 @@ export async function findPet(request: FastifyRequest, reply: FastifyReply) {
             id
         })
 
-        return reply.status(200).send({ pet })
+        return reply.status(200).send(pet)
 
     } catch (err) {
         if (err instanceof ResourceNotFoundError) {

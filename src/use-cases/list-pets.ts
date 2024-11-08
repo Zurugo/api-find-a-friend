@@ -33,23 +33,23 @@ export class ListAvailablePetsByCharacteristics {
         }
 
         const organizations = await this.organizationsRepository.findManyOrgsByCity(city, 1)
-
+        
         if(!organizations) {
             throw new ResourceNotFoundError()
         }
 
         const pets = await Promise.all(
             organizations.map(async (org) => {
-                const pets = await this.petsRepository.findManyPetsByCharacteristics(org.id, query)
 
-                if(!pets) {
-                    throw new ResourceNotFoundError()
-                }
+                const pets = await this.petsRepository.findManyPetsByCharacteristics(org.id, query)
 
                 if (pets.length === 0) {
                     throw new PetsNotFoundThisCharacteristics()
                 }
-                
+
+                if(!pets) {
+                    throw new ResourceNotFoundError()
+                }
                 return pets
             })
         )

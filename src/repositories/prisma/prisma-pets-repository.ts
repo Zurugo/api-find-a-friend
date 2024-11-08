@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { Prisma, Size } from '@prisma/client'
+import { Pet, Prisma, Size } from '@prisma/client'
 import { PetsRepository } from '../pets-repository'
 
 
@@ -28,25 +28,24 @@ export class PrismaPetsRepository implements PetsRepository {
         return pets
     }
     
-    async findManyPetsByCharacteristics(org_id: string, query: string) {
+    async findManyPetsByCharacteristics(org_id: string, query?: string) {
+        const searchTerm = query ?? ''
+
         const pets = await prisma.pet.findMany({
             where: {
                 org_id: org_id,
-                AND : query? 
-                [
-                    // { name: { contains: query, mode: 'insensitive' }},
-                    // { about: { contains: query, mode: 'insensitive' }},
-                    // { age: { contains: query, mode: 'insensitive' }},
-                    { size: query as Size },
-                    // !isNaN(parseInt(query)) ? { energy_level: { equals: parseInt(query) }} : {},
-                    // !isNaN(parseInt(query)) ? { independence_level: { equals: parseInt(query) }} : {},
-                    // { environment: { contains: query, mode: 'insensitive' }},
-                    // { adoption_requirements: { contains: query, mode: 'insensitive' }},           
-                ]   : undefined
+                OR: [
+                    { name: { contains: searchTerm} },
+                    ...(query && Object.values(Size).includes(query.toUpperCase() as Size) 
+                    ? [{ size: query.toUpperCase() as Size }] 
+                    : [])
+                ]
+                
             }
         })
 
-        return pets
+    return pets;
+
     }
 
     async create(data: Prisma.PetUncheckedCreateInput) {
