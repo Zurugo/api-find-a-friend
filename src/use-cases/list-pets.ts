@@ -15,6 +15,8 @@ interface ListPetsByCharacteristicsUseCaseResponse {
     pets: Pet[] 
 }
 
+let cityName: string
+
 export class ListAvailablePetsByCharacteristics {
     constructor(
         private organizationsRepository: OrganizationsRepository,
@@ -27,12 +29,21 @@ export class ListAvailablePetsByCharacteristics {
         city,
         query
     }: ListPetsByCharacteristicsUseCaseRequest): Promise<ListPetsByCharacteristicsUseCaseResponse>
-    {
+    { 
         if(!city) {
             throw new ParameterCityIsRequired()
         }
 
-        const organizations = await this.organizationsRepository.findManyOrgsByCity(city, 1)
+        if (city.includes(' ')) {
+            cityName = city
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+        } else {
+            cityName = city.charAt(0).toUpperCase() + city.slice(1)
+        }
+        
+        const organizations = await this.organizationsRepository.findManyOrgsByCity(cityName, 1)
         
         if(!organizations) {
             throw new ResourceNotFoundError()

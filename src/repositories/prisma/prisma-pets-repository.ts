@@ -36,9 +36,18 @@ export class PrismaPetsRepository implements PetsRepository {
                 org_id: org_id,
                 OR: [
                     { name: { contains: searchTerm} },
+                    { about : { contains: searchTerm} },
+                    { age : { contains: searchTerm} },
                     ...(query && Object.values(Size).includes(query.toUpperCase() as Size) 
                     ? [{ size: query.toUpperCase() as Size }] 
-                    : [])
+                    : []),
+                    // { energy_level: {equals: parseInt(query)}}
+                    // { independence_level: { equals: parsetInt(query) } }
+                    { environment: { contains: searchTerm } },
+                    { adoption_requirements: { contains: searchTerm } }
+
+                    
+                    
                 ]
                 
             }
