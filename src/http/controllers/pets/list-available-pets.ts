@@ -3,7 +3,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
 import { makeListAvailablePets } from '@/use-cases/factories/make-list-available-pets-use-case'
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error'
-import { strictEqual } from 'node:assert'
+import { PetsNotFoundThisCharacteristics } from '@/use-cases/errors/pets-not-found-this-charateristics'
 
 
 export async function listPets(request: FastifyRequest, reply: FastifyReply) {
@@ -24,8 +24,14 @@ export async function listPets(request: FastifyRequest, reply: FastifyReply) {
 
         const pets = await listPetsUseCase.execute({
             city,
-            query: query ? query : null
+            query: query ? query.toUpperCase() : undefined
         })
+
+
+        
+        if(!pets) {
+            throw new PetsNotFoundThisCharacteristics()
+        }
         
         return reply.status(200).send(pets)
 

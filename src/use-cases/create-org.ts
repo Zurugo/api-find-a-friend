@@ -35,6 +35,7 @@ export class CreateOrganizationUseCase {
         phone,
         user_id,
     }: CreateOrganizaitonUseCaseRequest): Promise<CreateOrganizationUseCaseResponse> {
+        console.log(user_id)
         const user = await this.usersRepository.findById(user_id)
 
         if(!user) {

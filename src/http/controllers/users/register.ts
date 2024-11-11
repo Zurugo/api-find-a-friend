@@ -19,7 +19,7 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
         const createUseCase = makeCreateUsersUseCase()
 
         await createUseCase.execute({
-            name,
+            name: name.toUpperCase(),
             email,
             password
         })

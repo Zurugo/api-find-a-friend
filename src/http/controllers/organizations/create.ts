@@ -23,13 +23,13 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
         const createUseCase = makeCreateOrganizationsUseCase()
 
         await createUseCase.execute({
-            cep,
-            state,
-            city,
-            district,
-            street,
-            number,
-            phone,
+            cep: cep.toUpperCase(),
+            state: state.toUpperCase(),
+            city: city.toUpperCase(),
+            district: district.toUpperCase(),
+            street: street.toUpperCase(),
+            number: number.toUpperCase(),
+            phone: phone.toUpperCase(),
             user_id: request.user.sub
         })
     } catch (err) {

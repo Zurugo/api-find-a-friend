@@ -24,7 +24,7 @@ describe('List all Pets (e2e)', () => {
                 id:'org-01',
                 cep: '14090520',
                 state: 'Sao Paulo',
-                city: 'Ribeirao Preto',
+                city: 'RIBEIRAO PRETO',
                 district: 'Castelo Branco Novo',
                 street:'Jose aissum', 
                 number: '1021',
@@ -39,7 +39,7 @@ describe('List all Pets (e2e)', () => {
                 id:'org-02',
                 cep: '14090520',
                 state: 'Sao Paulo',
-                city: 'Franca',
+                city: 'FRANCA',
                 district: 'Castelo Novo',
                 street:'Aissum', 
                 number: '021',
@@ -112,13 +112,15 @@ describe('List all Pets (e2e)', () => {
             }
         })
 
+        const test = await prisma.organization.findMany()
+        console.log(test)
+
         const response = await request(app.server)
             .get('/pets/list/Ribeirao%20Preto?query=SMALL')
             .set('Authorization', `Bearer ${token}`)
 
         expect(response.statusCode).toEqual(200)
         
-
         expect(response.body).toEqual(
             expect.objectContaining({
                 pets: 

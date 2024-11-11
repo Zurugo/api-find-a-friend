@@ -34,7 +34,7 @@ describe('Search all pets by your characteristics', () => {
             id:'org-01',
             cep: '14090520',
             state: 'Sao Paulo',
-            city: 'Ribeirao Preto',
+            city: 'RIBEIRAO PRETO',
             district: 'Castelo Branco Novo',
             street:'Jose aissum', 
             number: '1021',
@@ -46,7 +46,7 @@ describe('Search all pets by your characteristics', () => {
             id:'org-02',
             cep: '14090520',
             state: 'Sao Paulo',
-            city: 'Franca',
+            city: 'FRANCA',
             district: 'Castelo Branco Novo',
             street:'Jose aissum', 
             number: '1021',
@@ -114,10 +114,11 @@ describe('Search all pets by your characteristics', () => {
 
     it('should be able to search a pet list by your characteristics', async () => {
         const { pets } = await sut.execute({
-            city: 'Ribeirao Preto',
+            city: 'RIBEIRAO PRETO',
             query: 'SMALL'
         })
         
+        console.log(pets)
         expect(pets).toHaveLength(2)
 
         expect(pets).toEqual([

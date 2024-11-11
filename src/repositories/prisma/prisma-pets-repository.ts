@@ -45,9 +45,6 @@ export class PrismaPetsRepository implements PetsRepository {
                     // { independence_level: { equals: parsetInt(query) } }
                     { environment: { contains: searchTerm } },
                     { adoption_requirements: { contains: searchTerm } }
-
-                    
-                    
                 ]
                 
             }
@@ -59,7 +56,7 @@ export class PrismaPetsRepository implements PetsRepository {
 
     async create(data: Prisma.PetUncheckedCreateInput) {
         const pet = await prisma.pet.create({
-            data,
+            data
         })
 
         return pet

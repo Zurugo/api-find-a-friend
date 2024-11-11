@@ -49,15 +49,15 @@ export class CreatePetUseCase {
         }
 
         const pet = await this.petsRepository.create({
-            name,
-            about,
+            name: name.toUpperCase(),
+            about: about.toUpperCase(),
             age,
             size,
             energy_level,
             independence_level,
-            environment,
+            environment: environment.toUpperCase(),
             photos,
-            adoption_requirements,
+            adoption_requirements: adoption_requirements.toUpperCase(),
             org_id
         })
 

@@ -8,7 +8,7 @@ import { ParameterCityIsRequired } from './errors/city-is-required-to-search-pet
 
 interface ListPetsByCharacteristicsUseCaseRequest {
     city: string
-    query: string | null
+    query: string | undefined
 }
 
 interface ListPetsByCharacteristicsUseCaseResponse {
@@ -38,9 +38,10 @@ export class ListAvailablePetsByCharacteristics {
             cityName = city
             .split(' ')
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(' ');
+            .join(' ')
+            .toUpperCase()
         } else {
-            cityName = city.charAt(0).toUpperCase() + city.slice(1)
+            cityName = city.charAt(0).toUpperCase() + city.slice(1).toUpperCase()
         }
         
         const organizations = await this.organizationsRepository.findManyOrgsByCity(cityName, 1)
@@ -54,13 +55,14 @@ export class ListAvailablePetsByCharacteristics {
 
                 const pets = await this.petsRepository.findManyPetsByCharacteristics(org.id, query)
 
-                if (pets.length === 0) {
-                    throw new PetsNotFoundThisCharacteristics()
-                }
-
                 if(!pets) {
                     throw new ResourceNotFoundError()
                 }
+
+                if (pets.length === 0) {
+                    throw new PetsNotFoundThisCharacteristics()
+                }
+                
                 return pets
             })
         )
